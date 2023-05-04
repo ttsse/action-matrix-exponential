@@ -25,8 +25,8 @@ class expmv
     void compute_action();
 
     /// @brief get the computed action
-    /// @return the computed action as a shared_ptr<Vec>
-    std::shared_ptr<Vec> get_expmvtAb();
+    /// @param v a pointer to the vector you want to save the result in
+    void get_expmvtAb(Vec *v);
 
     /// @brief set the matrix
     /// @param A the matrix to be set as the matrix to take the exponential of
@@ -42,7 +42,7 @@ class expmv
 
     private:
 
-    PETSC_REAL t;
+    PETSC_REAL t {0};
     Mat A;
     Vec b;
     Vec expmvtAb
