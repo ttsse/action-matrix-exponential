@@ -1,8 +1,8 @@
-#include <petsc/petscmat.h>
-#include <petsc/petscvec.h>
-#include <petsc/petscsystypes.h>
-#include "src/expmv.h"
-
+#include <petscmat.h>
+#include <petscvec.h>
+#include <petscsystypes.h>
+#include "../src/expmv.h"
+#include <iostream>
 int main(int argc, char **argv) {
     PetscInitialize(&argc, &argv, NULL, NULL);
 
@@ -39,10 +39,11 @@ int main(int argc, char **argv) {
     VecAssemblyEnd(b);
 
     // Make a scaling value
-    PETSC_REAL t = 1;
+    PetscReal t = 1;
 
     expmv matexp(t, A, b);
-
+    matexp.compute_action();
+    std::cout << "\nt is currently set to " << matexp.get_t() << "\n";
     PetscFinalize();
     return 0;
 }
