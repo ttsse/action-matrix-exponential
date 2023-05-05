@@ -2,9 +2,9 @@
 #define __EXPMV_H
 
 
-#include<petsc/petscmat.h>
-#include<petsc/petscvec.h>
-#include<petsc/petscsystypes.h>
+#include<petscmat.h>
+#include<petscvec.h>
+#include<petscsystypes.h>
 
 
 class expmv
@@ -19,7 +19,7 @@ class expmv
     ~expmv() {};
 
     /// @brief constructor
-    expmv(PETSC_REAL t, Mat A, Vec b);
+    expmv(PetscReal t, Mat A, Vec b);
 
     /// @brief compute exp(t*A)b and save it in variable expmvtAb
     void compute_action();
@@ -34,18 +34,22 @@ class expmv
 
     /// @brief set the scaling value t
     /// @param t the scaling value
-    void set_t(PETSC_REAL t);
+    void set_t(PetscReal t);
 
     /// @brief set the Vector
     /// @param b the vector to be multiplied by the exponential
     void set_b(Vec b);
 
+    ///@brief get the current value for t
+    ///@return the value for t
+    PetscReal get_t();
+
     private:
 
-    PETSC_REAL t {0};
+    PetscReal t;
     Mat A;
     Vec b;
-    Vec expmvtAb
-}
+    Vec expmvtAb;
+};
 
 #endif
