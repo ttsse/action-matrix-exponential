@@ -6,6 +6,7 @@
 #include<petscvec.h>
 #include<petscsystypes.h>
 #include<string.h>
+#include<vector>
 
 
 class expmv
@@ -36,14 +37,10 @@ class expmv
     /// @param s 
     void find_params(double& mstar, int& s);
 
-    /// @brief finds an appropriate value of theta for double precision
+    /// @brief finds an appropriate value of theta for each precision
     /// @param m 
     /// @return the value for theta
-    double theta_double_prec(int m);
-
-    double theta_single_prec(int m);
-
-    double theta_half_prec(int m);
+    std::vector<double> get_theta(int m);
 
     public:
 

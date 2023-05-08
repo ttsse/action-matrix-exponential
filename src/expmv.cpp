@@ -7,7 +7,7 @@
 #include<iostream>
 #include "expmv.h"
 
-expmv::expmv(PetscReal t, Mat A, Vec b, int mmax = 55, int pmax = 15, bool shift = true, bool balance = false)
+expmv::expmv(PetscReal t, Mat A, Vec b,string precision = 'double', int mmax = 55, int pmax = 15, bool shift = true, bool balance = false)
 {
     this->t = t;
     this->A = A;
@@ -35,7 +35,7 @@ void expmv::get_expmvtAb(Vec *v)
 
 void find_params(double& mstar, int& s)
 {
-    
+
 }
 
 void expmv::set_A(Mat A)
