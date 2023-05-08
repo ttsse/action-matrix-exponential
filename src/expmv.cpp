@@ -21,8 +21,8 @@ void expmv::compute_action()
 
 void expmv::get_expmvtAb(Vec *v)
 {
-    PetscErrorCode ierr;
-    ierr = VecDuplicate(this->expmvtAb, v); //CHKERRQ(ierr);
+    // PetscErrorCode ierr;
+    VecDuplicate(this->expmvtAb, v); //CHKERRQ(ierr);
 };
 
 void expmv::set_A(Mat A)
