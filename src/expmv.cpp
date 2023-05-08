@@ -7,11 +7,19 @@
 #include<iostream>
 #include "expmv.h"
 
-expmv::expmv(PetscReal t, Mat A, Vec b)
+expmv::expmv(PetscReal t, Mat A, Vec b, int mmax = 55, int pmax = 15, bool shift = true, bool balance = false)
 {
     this->t = t;
     this->A = A;
     this->b =b;
+
+    MatNorm(A, NORM_1, this->Anorm);
+
+    this->mmax = mmax;
+    this->pmax = pmax;
+
+    this->shift = shift;
+    this->balance = balance;
 };
 
 void expmv::compute_action()
@@ -24,6 +32,11 @@ void expmv::get_expmvtAb(Vec *v)
     // PetscErrorCode ierr;
     VecDuplicate(this->expmvtAb, v); //CHKERRQ(ierr);
 };
+
+void find_params(double& mstar, int& s)
+{
+    
+}
 
 void expmv::set_A(Mat A)
 {
