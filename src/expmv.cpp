@@ -85,13 +85,23 @@ void expmv::find_params()
         VecSetFromOptions(mVec);
 
         VecSetValues(AnormVec, this->mmax, allelem, AnormPetsc, INSERT_VALUES);
-        VecSetValues(mVec, this->mmax, allelem, mPetscScalar, INSERT_VALUES); //turns out our allelemvector can be reused for setting values of m
+        VecSetValues(mVec, this->mmax, allelem, mPetscScalar, INSERT_VALUES);
 
-        VecPointwiseDivide(Anormdivthetam, AnormVec, mVec);
+        VecPointwiseDivide(Anormdivthetam, AnormVec, thetaVec);
+
+        PetscScalar Anormdivthetamceil[this->mmax];
+        VecGetValues(Anormdivthetam, this->mmax, allelem, Anormdivthetamceil);
+        for (int i = 0; i<this->mmax; i++)
+        {
+            Anormdivthetamceil[i] = ceil(Anormdivthetamceil[i]);
+        }
+        VecSetValues(Anormdivthetam, this->mmax, allelem, Anormdivthetamceil, INSERT_VALUES);
+
         VecPointwiseMult(thetaVec, mVec,Anormdivthetam); //let's reuse thetaVec
 
         PetscReal sTemp;
         VecMin(thetaVec, &(this->mstar), &sTemp); //get mstar according to line 2 in code fragment 3.1
+        this->mstar += 1; //indexing is zero based but our m's mare not
         VecGetValues(Anormdivthetam, 1, allelem+this->mstar-1, &sTemp); //get s according to line 3
         this->s = (int)(ceil(sTemp));
     }
