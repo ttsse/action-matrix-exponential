@@ -55,7 +55,7 @@ void expmv::find_params()
     for (int i = 0; i<this->mmax; i++) 
     {
         allelem[i] = i;
-        mPetscScalar[this->mmax];
+        mPetscScalar[i] = i+1;
         AnormPetsc[i] = this->Anorm;
     }
 
@@ -90,10 +90,10 @@ void expmv::find_params()
         VecPointwiseDivide(Anormdivthetam, AnormVec, mVec);
         VecPointwiseMult(thetaVec, mVec,Anormdivthetam); //let's reuse thetaVec
 
-        VecMin(thetaVec, &(this->mstar), NULL); //get mstar according to line 2 in code fragment 3.1
-        PetscScalar* sTemp;
-        VecGetValues(thetaVec, 1, allelem+this->mstar-1, sTemp); //get s according to line 3
-        this->s = (int)(*sTemp);
+        PetscReal sTemp;
+        VecMin(thetaVec, &(this->mstar), &sTemp); //get mstar according to line 2 in code fragment 3.1
+        VecGetValues(Anormdivthetam, 1, allelem+this->mstar-1, &sTemp); //get s according to line 3
+        this->s = (int)(ceil(sTemp));
     }
 };
 
@@ -115,4 +115,14 @@ void expmv::set_b(Vec b)
 PetscReal expmv::get_t()
 {
     return this->t;
+};
+
+int expmv::get_mstar()
+{
+    return this->mstar;
+};
+
+int expmv::get_s()
+{
+    return this->s;
 };

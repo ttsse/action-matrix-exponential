@@ -60,6 +60,10 @@ class expmv
     ///@return the value for t
     PetscReal get_t();
 
+    int get_mstar();
+
+    int get_s();
+
     private:
 
     PetscReal t;
