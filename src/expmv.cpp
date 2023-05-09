@@ -7,7 +7,7 @@
 #include<iostream>
 #include "expmv.h"
 
-expmv::expmv(PetscReal t, Mat A, Vec b,const char precision[] = "double", int mmax = 55, int pmax = 15, bool shift = true, bool balance = false)
+expmv::expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pmax, bool shift, bool balance)
 {
     this->t = t;
     this->A = A;
