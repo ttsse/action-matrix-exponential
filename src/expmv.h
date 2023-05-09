@@ -5,7 +5,7 @@
 #include<petscmat.h>
 #include<petscvec.h>
 #include<petscsystypes.h>
-#include<string.h>
+#include<string>
 #include<vector>
 
 
@@ -21,7 +21,7 @@ class expmv
     ~expmv() {};
 
     /// @brief constructor
-    expmv(PetscReal t, Mat A, Vec b,string precision = 'double', int mmax = 55, int pmax = 15, bool shift = true, bool balance = false);
+    expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pmax, bool shift, bool balance);
 
     /// @brief compute exp(t*A)b and save it in variable expmvtAb
     void compute_action();
@@ -35,12 +35,12 @@ class expmv
     /// @brief finds the parameters m* and s according to code fragment 3.1 in https://epubs.siam.org/doi/pdf/10.1137/100788860
     /// @param mstar 
     /// @param s 
-    void find_params(double& mstar, int& s);
+    void find_params();
 
     /// @brief finds an appropriate value of theta for each precision
     /// @param m 
     /// @return the value for theta
-    std::vector<double> get_theta(int m);
+    std::vector<double> get_theta();
 
     public:
 
@@ -70,7 +70,10 @@ class expmv
     double Anorm;
     int mmax;
     int pmax;
-    string precision;
+    std::string precision;
+
+    int mstar;
+    int s;
 
     bool shift;
     bool balance;
