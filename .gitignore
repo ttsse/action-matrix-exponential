@@ -1,3 +1,4 @@
+.vscode/*
 *.py    
 *.o
 demo/demo_initialize
