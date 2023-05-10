@@ -196,8 +196,9 @@ void expmv::find_params()
         PetscReal sTemp;
         VecMin(thetaVec, &(this->mstar), &sTemp); //get mstar according to line 2 in code fragment 3.1
         this->mstar += 1; //indexing is zero based but our m's are not
-        VecGetValues(Anormdivthetam, 1, allelem+this->mstar-1, &sTemp); //get s according to line 3
-        this->s = (int)(ceil(sTemp));
+        this->s = sTemp/mstar;
+        // VecGetValues(Anormdivthetam, 1, allelem+this->mstar-1, &sTemp); //get s according to line 3
+        // this->s = (int)(ceil(sTemp));
     }
     else
     {
