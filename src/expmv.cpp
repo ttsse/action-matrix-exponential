@@ -219,7 +219,7 @@ void expmv::set_b(Vec b)
     PetscObjectSetName((PetscObject)this->b, "b");
 };
 
-void expmv::set_t(PetscReal)
+void expmv::set_t(PetscReal t)
 {
     this->t = t;
 };

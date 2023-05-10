@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 
     MatView(A, PETSC_VIEWER_STDOUT_WORLD);
     VecView(b, PETSC_VIEWER_STDOUT_WORLD);
-
+   
     PetscFinalize();
     return 0;
 }
