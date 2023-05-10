@@ -9,51 +9,15 @@
 
 expmv::expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pmax, bool shift, bool balance)
 {
-    this->t = t;
-    this->A = A;
-    PetscObjectSetName((PetscObject)this->A, "A");
+    this->set_t(t);
+    this->set_A(A);
+    this->set_b(b);
+    this->set_mmax(mmax);
+    this->set_pmax(pmax);
+    this->set_precision(precision);
 
-    this->b = b;
-    PetscObjectSetName((PetscObject)this->b, "b");
-
-    MatNorm(A, NORM_1, &(this->Anorm));
-    MatGetTrace(this->A, &(this->mu));
-    MatGetSize(A, &(this->n), NULL);
-
-    VecCreate(PETSC_COMM_WORLD, &(this->expmvtAb));
-    VecSetSizes(this->expmvtAb, PETSC_DECIDE, this->n);
-    VecSetFromOptions(this->expmvtAb);
-
-    this->mmax = mmax;
-    this->pmax = pmax;
-
-    std::string prec(precision);
-
-    this->precision = prec;
-
-    std::string half("half");
-    std::string single("single");
-    std::string doubles("double");
-
-    if (this->precision == half)
-    {
-        this->tol = pow(2,-10);
-    }
-    else if (this->precision == single)
-    {
-        this->tol = pow(2,-24);
-    }
-    else if (this->precision == doubles)
-    {
-        this->tol = pow(2,-53);
-    }
-    else
-    {
-        throw std::exception();
-    }
-
-    this->shift = shift;
-    this->balance = balance;
+    this->set_shift(shift);
+    this->set_balance(balance);
 };
 
 void expmv::compute_action()
@@ -67,11 +31,9 @@ void expmv::compute_action()
     if (this->shift)
     {
 
-        VecCreate(PETSC_COMM_WORLD, &muI);
+        VecCreate(MPI_COMM_WORLD, &muI);
         VecSetSizes(muI, PETSC_DECIDE, this->n);
         VecSetFromOptions(muI);
-        VecAssemblyBegin(muI);
-        VecAssemblyEnd(muI);
 
         //line 5
         PetscInt allelem[this->mmax]; //we need a vector specifying all elements for out setvalues
@@ -159,10 +121,6 @@ void expmv::compute_action()
     }
 
     PetscObjectSetName((PetscObject)this->expmvtAb, "expmvtAb");
-
-    
-    
-
 };
 
 void expmv::find_params()
@@ -187,10 +145,10 @@ void expmv::find_params()
     }
 
     //create the vectors
-    VecCreate(PETSC_COMM_WORLD, &thetaVec);
+    VecCreate(MPI_COMM_WORLD, &thetaVec);
     VecSetSizes(thetaVec, PETSC_DECIDE, this->mmax);
     VecSetFromOptions(thetaVec);
-    VecCreate(PETSC_COMM_WORLD, &Anormdivthetam);
+    VecCreate(MPI_COMM_WORLD, &Anormdivthetam);
     VecSetSizes(Anormdivthetam, PETSC_DECIDE, this->mmax);
     VecSetFromOptions(Anormdivthetam);
 
@@ -204,16 +162,12 @@ void expmv::find_params()
 
     if (this->Anorm <= (4*theta[this->mmax]*this->pmax*(this->pmax+3))/(this->mmax) || true) //condition 3.13
     {
-        VecCreate(PETSC_COMM_WORLD, &AnormVec);
+        VecCreate(MPI_COMM_WORLD, &AnormVec);
         VecSetSizes(AnormVec, PETSC_DECIDE, this->mmax);
         VecSetFromOptions(AnormVec);
-        VecCreate(PETSC_COMM_WORLD, &mVec);
+        VecCreate(MPI_COMM_WORLD, &mVec);
         VecSetSizes(mVec, PETSC_DECIDE, this->mmax);
         VecSetFromOptions(mVec);
-        VecAssemblyBegin(AnormVec);
-        VecAssemblyEnd(AnormVec);
-        VecAssemblyBegin(mVec);
-        VecAssemblyEnd(mVec);
 
         VecSetValues(AnormVec, this->mmax, allelem, AnormPetsc, INSERT_VALUES);
         VecSetValues(mVec, this->mmax, allelem, mPetscScalar, INSERT_VALUES);
@@ -242,10 +196,155 @@ void expmv::find_params()
     }
 };
 
+///setter functions
+
 void expmv::set_A(Mat A)
 {
     this->A = A;
+
+    PetscObjectSetName((PetscObject)this->A, "A");
+
+    MatNorm(A, NORM_1, &(this->Anorm));
+    MatGetTrace(this->A, &(this->mu));
+    MatGetSize(A, &(this->n), NULL);
+
+    VecCreate(MPI_COMM_WORLD, &(this->expmvtAb));
+    VecSetSizes(this->expmvtAb, PETSC_DECIDE, this->n);
+    VecSetFromOptions(this->expmvtAb);
 };
+
+void expmv::set_b(Vec b)
+{
+    this->b = b;
+    PetscObjectSetName((PetscObject)this->b, "b");
+};
+
+void expmv::set_t(PetscReal)
+{
+    this->t = t;
+};
+
+void expmv::set_precision(std::string precision)
+{
+    std::string prec(precision);
+
+    this->precision = prec;
+
+    std::string half("half");
+    std::string single("single");
+    std::string doubles("double");
+
+    if (this->precision == half)
+    {
+        this->tol = pow(2,-10);
+    }
+    else if (this->precision == single)
+    {
+        this->tol = pow(2,-24);
+    }
+    else if (this->precision == doubles)
+    {
+        this->tol = pow(2,-53);
+    }
+    else
+    {
+        throw std::exception();
+    }
+}
+
+void expmv::set_mmax(int mmax)
+{
+    this->mmax = mmax;
+}
+
+void expmv::set_pmax(int pmax)
+{
+    this->pmax = pmax;
+}
+
+void expmv::set_shift(bool shift)
+{
+    this->shift = shift;
+}
+
+void expmv::set_balance(bool balance)
+{
+    this->balance = balance;
+}
+
+///getter functions
+
+Mat expmv::get_A()
+{
+    return this->A;
+}
+
+double expmv::get_Anorm()
+{
+    return this->Anorm;
+}
+
+double expmv::get_mu()
+{
+    return this->mu;
+}
+
+PetscInt expmv::get_n()
+{
+    return this->n;
+}
+
+Vec expmv::get_b()
+{
+    return this->b;
+}
+
+Vec expmv::get_expmvtAb()
+{
+    return this->expmvtAb;
+}
+
+std::string expmv::get_precision()
+{
+    return this->precision;
+}
+
+int expmv::get_mstar()
+{
+    return this->mstar;
+}
+
+int expmv::get_s()
+{
+    return this->s;
+}
+
+PetscReal expmv::get_t()
+{
+    return this->t;
+}
+
+int expmv::get_mmax()
+{
+    return this->mmax;
+}
+
+int expmv::get_pmax()
+{
+    return this->pmax;
+}
+
+bool expmv::get_shift()
+{
+    return this->shift;
+}
+
+bool expmv::get_balance()
+{
+    return this->balance;
+}
+
+///printing functions
 
 void expmv::print_A()
 {
@@ -260,34 +359,4 @@ void expmv::print_b()
 void expmv::print_expmvtAb()
 {
     VecView(this->expmvtAb, PETSC_VIEWER_STDOUT_WORLD);
-};
-
-void expmv::get_expmvtAb(Vec *v)
-{
-    VecDuplicate(this->expmvtAb, v);
-};
-
-void expmv::set_t(PetscReal)
-{
-    this->t = t;
-};
-
-void expmv::set_b(Vec b)
-{
-    this->b = b;
-};
-
-PetscReal expmv::get_t()
-{
-    return this->t;
-};
-
-int expmv::get_mstar()
-{
-    return this->mstar;
-};
-
-int expmv::get_s()
-{
-    return this->s;
 };
