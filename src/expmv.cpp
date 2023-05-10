@@ -176,15 +176,20 @@ void expmv::find_params()
 
         VecPointwiseDivide(Anormdivthetam, AnormVec, thetaVec);
 
-        PetscScalar Anormdivthetamceil[this->mmax];
-        VecGetValues(Anormdivthetam, this->mmax, allelem, Anormdivthetamceil);
+        PetscScalar* Anormdivthetamceil;
+        // VecGetValues(Anormdivthetam, this->mmax, allelem, Anormdivthetamceil);
+        VecGetArray(Anormdivthetam, &Anormdivthetamceil);
+
         for (int i = 0; i<this->mmax; i++)
         {
             Anormdivthetamceil[i] = ceil(Anormdivthetamceil[i]);
         }
+
         VecSetValues(Anormdivthetam, this->mmax, allelem, Anormdivthetamceil, INSERT_VALUES);
         VecAssemblyBegin(Anormdivthetam);
         VecAssemblyEnd(Anormdivthetam);
+
+        VecRestoreArray(Anormdivthetam, &Anormdivthetamceil);
 
         VecPointwiseMult(thetaVec, mVec,Anormdivthetam); //let's reuse thetaVec
 
