@@ -161,6 +161,8 @@ void expmv::find_params()
 
     //make thetaPetsc into a PetscVector
     VecSetValues(thetaVec, this->mmax, allelem, thetaPetsc, INSERT_VALUES);
+    VecAssemblyBegin(thetaVec);
+    VecAssemblyEnd(thetaVec);
 
     if (this->Anorm <= (4*theta[this->mmax]*this->pmax*(this->pmax+3))/(this->mmax) || true) //condition 3.13
     {
