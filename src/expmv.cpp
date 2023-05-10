@@ -34,6 +34,8 @@ void expmv::compute_action()
         VecCreate(MPI_COMM_WORLD, &muI);
         VecSetSizes(muI, PETSC_DECIDE, this->n);
         VecSetFromOptions(muI);
+        VecAssemblyBegin(muI);
+        VecAssemblyEnd(muI);
 
         //line 5
         PetscInt allelem[this->mmax]; //we need a vector specifying all elements for out setvalues
@@ -169,6 +171,11 @@ void expmv::find_params()
         VecSetSizes(mVec, PETSC_DECIDE, this->mmax);
         VecSetFromOptions(mVec);
 
+        VecAssemblyBegin(AnormVec);
+        VecAssemblyEnd(AnormVec);
+        VecAssemblyBegin(mVec);
+        VecAssemblyEnd(mVec);
+
         VecSetValues(AnormVec, this->mmax, allelem, AnormPetsc, INSERT_VALUES);
         VecSetValues(mVec, this->mmax, allelem, mPetscScalar, INSERT_VALUES);
 
@@ -211,6 +218,8 @@ void expmv::set_A(Mat A)
     VecCreate(MPI_COMM_WORLD, &(this->expmvtAb));
     VecSetSizes(this->expmvtAb, PETSC_DECIDE, this->n);
     VecSetFromOptions(this->expmvtAb);
+    VecAssemblyBegin(this->expmvtAb);
+    VecAssemblyEnd(this->expmvtAb);
 };
 
 void expmv::set_b(Vec b)
