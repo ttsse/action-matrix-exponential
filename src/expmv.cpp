@@ -34,19 +34,9 @@ void expmv::compute_action()
         VecCreate(MPI_COMM_WORLD, &muI);
         VecSetSizes(muI, PETSC_DECIDE, this->n);
         VecSetFromOptions(muI);
+        VecSet(muI,-1*(this->mu));
         VecAssemblyBegin(muI);
-        VecAssemblyEnd(muI);
-
-        //line 5
-        PetscInt allelem[this->mmax]; //we need a vector specifying all elements for out setvalues
-        PetscScalar muPetsc[this->mmax];
-        for (int i = 0; i<this->n; i++) 
-        {
-            muPetsc[i] = -1*this->mu;
-            allelem[i] = i;
-        }
-
-        VecSetValues(muI,this->n, allelem, muPetsc,INSERT_VALUES);
+        VecAssemblyEnd(muI);        
 
         MatDiagonalSet(this->A, muI, ADD_VALUES); //line 6
     }
@@ -138,12 +128,10 @@ void expmv::find_params()
     PetscScalar* thetaPetsc = &theta[0]; //we need theta in a different type
     PetscInt allelem[this->mmax]; //we need a vector specifying all elements for out setvalues
     PetscScalar mPetscScalar[this->mmax]; //and another one with the same thing but different data type
-    PetscScalar AnormPetsc[this->mmax]; //similarly need a vector all containing the same number
     for (int i = 0; i<this->mmax; i++) 
     {
         allelem[i] = i;
         mPetscScalar[i] = i+1;
-        AnormPetsc[i] = this->Anorm;
     }
 
     //create the vectors
@@ -178,7 +166,7 @@ void expmv::find_params()
         VecAssemblyBegin(mVec);
         VecAssemblyEnd(mVec);
 
-        VecSetValues(AnormVec, this->mmax, allelem, AnormPetsc, INSERT_VALUES);
+        VecSet(AnormVec, this->Anorm);
         VecAssemblyBegin(AnormVec);
         VecAssemblyEnd(AnormVec);
 
@@ -223,6 +211,7 @@ void expmv::set_A(Mat A)
     MatNorm(A, NORM_1, &(this->Anorm));
     MatGetTrace(this->A, &(this->mu));
     MatGetSize(A, &(this->n), NULL);
+    this->mu = this->mu/(this->n);
 
     VecCreate(MPI_COMM_WORLD, &(this->expmvtAb));
     VecSetSizes(this->expmvtAb, PETSC_DECIDE, this->n);
