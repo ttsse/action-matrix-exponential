@@ -20,7 +20,7 @@ expmv::expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pma
     MatGetTrace(this->A, &(this->mu));
     MatGetSize(A, &(this->n), NULL);
 
-    VecCreate(MPI_COMM_WORLD, &(this->expmvtAb));
+    VecCreate(PETSC_COMM_WORLD, &(this->expmvtAb));
     VecSetSizes(this->expmvtAb, PETSC_DECIDE, this->n);
     VecSetFromOptions(this->expmvtAb);
 
@@ -67,9 +67,11 @@ void expmv::compute_action()
     if (this->shift)
     {
 
-        VecCreate(MPI_COMM_WORLD, &muI);
+        VecCreate(PETSC_COMM_WORLD, &muI);
         VecSetSizes(muI, PETSC_DECIDE, this->n);
         VecSetFromOptions(muI);
+        VecAssemblyBegin(muI);
+        VecAssemblyEnd(muI);
 
         //line 5
         PetscInt allelem[this->mmax]; //we need a vector specifying all elements for out setvalues
@@ -185,10 +187,10 @@ void expmv::find_params()
     }
 
     //create the vectors
-    VecCreate(MPI_COMM_WORLD, &thetaVec);
+    VecCreate(PETSC_COMM_WORLD, &thetaVec);
     VecSetSizes(thetaVec, PETSC_DECIDE, this->mmax);
     VecSetFromOptions(thetaVec);
-    VecCreate(MPI_COMM_WORLD, &Anormdivthetam);
+    VecCreate(PETSC_COMM_WORLD, &Anormdivthetam);
     VecSetSizes(Anormdivthetam, PETSC_DECIDE, this->mmax);
     VecSetFromOptions(Anormdivthetam);
 
@@ -202,12 +204,16 @@ void expmv::find_params()
 
     if (this->Anorm <= (4*theta[this->mmax]*this->pmax*(this->pmax+3))/(this->mmax) || true) //condition 3.13
     {
-        VecCreate(MPI_COMM_WORLD, &AnormVec);
+        VecCreate(PETSC_COMM_WORLD, &AnormVec);
         VecSetSizes(AnormVec, PETSC_DECIDE, this->mmax);
         VecSetFromOptions(AnormVec);
-        VecCreate(MPI_COMM_WORLD, &mVec);
+        VecCreate(PETSC_COMM_WORLD, &mVec);
         VecSetSizes(mVec, PETSC_DECIDE, this->mmax);
         VecSetFromOptions(mVec);
+        VecAssemblyBegin(AnormVec);
+        VecAssemblyEnd(AnormVec);
+        VecAssemblyBegin(mVec);
+        VecAssemblyEnd(mVec);
 
         VecSetValues(AnormVec, this->mmax, allelem, AnormPetsc, INSERT_VALUES);
         VecSetValues(mVec, this->mmax, allelem, mPetscScalar, INSERT_VALUES);
