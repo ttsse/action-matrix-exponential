@@ -14,6 +14,12 @@ expmv::expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pma
     this->b =b;
 
     MatNorm(A, NORM_1, &(this->Anorm));
+    MatGetTrace(this->A, &(this->mu));
+    MatGetSize(A, &(this->n), NULL);
+
+    VecCreate(MPI_COMM_WORLD, &(this->expmvtAb));
+    VecSetSizes(this->expmvtAb, PETSC_DECIDE, this->n);
+    VecSetFromOptions(this->expmvtAb);
 
     this->mmax = mmax;
     this->pmax = pmax;
@@ -22,14 +28,116 @@ expmv::expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pma
 
     this->precision = prec;
 
+    std::string half("half");
+    std::string single("single");
+    std::string doubles("double");
+
+    if (this->precision == half)
+    {
+        this->tol = pow(2,-10);
+    }
+    else if (this->precision == single)
+    {
+        this->tol = pow(2,-24);
+    }
+    else if (this->precision == doubles)
+    {
+        this->tol = pow(2,-53);
+    }
+    else
+    {
+        throw std::exception();
+    }
+
     this->shift = shift;
     this->balance = balance;
 };
 
 void expmv::compute_action()
 {
-    std::cout << "I'm not doing much for now, come back later =/\n";
-    this->find_params();
+    if (this->balance)
+    {
+        std::cout << "Sorry kid, no balancing allowed yet, come back later >=(\n";
+    }
+    if (this->shift)
+    {
+        Vec muI;
+
+        VecCreate(MPI_COMM_WORLD, &muI);
+        VecSetSizes(muI, PETSC_DECIDE, this->n);
+        VecSetFromOptions(muI);
+
+        //line 5
+        PetscInt allelem[this->mmax]; //we need a vector specifying all elements for out setvalues
+        PetscScalar muPetsc[this->mmax];
+        for (int i = 0; i<this->n; i++) 
+        {
+            muPetsc[i] = -1*this->mu;
+            allelem[i] = i;
+        }
+
+        VecSetValues(muI,this->n, allelem, muPetsc,INSERT_VALUES);
+
+        MatDiagonalSet(this->A, muI, ADD_VALUES); //line 6
+    }
+
+    if ((!(this->t) && !(this->Anorm)))
+    {
+        this->mstar = 0; this->s = 1; //line 8
+    }
+    else
+    {
+        this->find_params(); //line 10
+    }
+
+    PetscScalar eta;    
+
+    VecCopy(this->b, this->expmvtAb); 
+    eta = exp(this->t * this->mu/(this->s)); //line 12
+
+
+    PetscScalar c1, c2, Fnorm;
+    Vec btemp;
+
+    VecCreate(MPI_COMM_WORLD, &btemp);
+    VecSetSizes(btemp, PETSC_DECIDE, this->n);
+    VecSetFromOptions(btemp);
+
+    for (int i = 1; i <= this->s; i++)
+    {
+        VecNorm(this->b, NORM_INFINITY, &c1); //line 14
+
+        for (int j = 1; j <= this->mstar; j++)
+        {
+            //line 16
+            MatMult(this->A, this->b, btemp);
+            VecScale(btemp, (PetscScalar)(this->t/(this->s * j)));
+            VecCopy(btemp, this->b);
+            VecNorm(this->b, NORM_INFINITY, &c2);
+
+            VecAXPY(this->expmvtAb, 1, this->b); //line 17
+
+            //line 18
+            VecNorm(this->expmvtAb, NORM_INFINITY, &Fnorm);
+
+            if (c1+c2 <= this->tol*Fnorm)
+            {
+                break;
+            }
+
+            c1 = c2; //line 19
+        }
+
+        VecScale(this->expmvtAb, eta);
+        VecCopy(this->expmvtAb, this->b);
+    }
+
+    if (this->balance)
+    {
+        //do some cool stuff
+    }
+
+
 };
 
 void expmv::get_expmvtAb(Vec *v)
@@ -101,9 +209,13 @@ void expmv::find_params()
 
         PetscReal sTemp;
         VecMin(thetaVec, &(this->mstar), &sTemp); //get mstar according to line 2 in code fragment 3.1
-        this->mstar += 1; //indexing is zero based but our m's mare not
+        this->mstar += 1; //indexing is zero based but our m's are not
         VecGetValues(Anormdivthetam, 1, allelem+this->mstar-1, &sTemp); //get s according to line 3
         this->s = (int)(ceil(sTemp));
+    }
+    else
+    {
+        //not implemented yet, i'm sure it will work...
     }
 };
 
