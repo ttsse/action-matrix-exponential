@@ -177,7 +177,7 @@ void expmv::find_params()
         VecPointwiseDivide(Anormdivthetam, AnormVec, thetaVec);
 
         PetscScalar* Anormdivthetamceil;
-        // VecGetValues(Anormdivthetam, this->mmax, allelem, Anormdivthetamceil);
+        
         VecGetArray(Anormdivthetam, &Anormdivthetamceil);
 
         for (int i = 0; i<this->mmax; i++)
@@ -185,16 +185,14 @@ void expmv::find_params()
             Anormdivthetamceil[i] = ceil(Anormdivthetamceil[i]);
         }
 
-        VecSetValues(Anormdivthetam, this->mmax, allelem, Anormdivthetamceil, INSERT_VALUES);
-        VecAssemblyBegin(Anormdivthetam);
-        VecAssemblyEnd(Anormdivthetam);
-
-        VecRestoreArray(Anormdivthetam, &Anormdivthetamceil);
+	VecRestoreArray(Anormdivthetam,&Anormdivthetamceil);
 
         VecPointwiseMult(thetaVec, mVec,Anormdivthetam); //let's reuse thetaVec
 
         PetscReal sTemp;
         VecMin(thetaVec, &(this->mstar), &sTemp); //get mstar according to line 2 in code fragment 3.1
+	//std::cout << "\nthis->mstar = " << this->mstar <<"\n"; 
+	//std::cout << "\nsTemp = " << sTemp << "\n";
         this->mstar += 1; //indexing is zero based but our m's are not
         this->s = sTemp/mstar;
         // VecGetValues(Anormdivthetam, 1, allelem+this->mstar-1, &sTemp); //get s according to line 3
