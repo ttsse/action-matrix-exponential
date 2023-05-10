@@ -43,9 +43,9 @@ int main(int argc, char **argv) {
 
     expmv matexp(t, A, b);
     matexp.compute_action();
-    std::cout << "\nt is currently set to " << matexp.get_t() << "\n";
-    std::cout << "\nmstar is currently set to " << matexp.get_mstar() << "\n";
-    std::cout << "\ns is currently set to " << matexp.get_s() << "\n";
+    PetscPrintf(PETSC_COMM_WORLD,"\nt is currently set to %f \n", matexp.get_t());
+    PetscPrintf(PETSC_COMM_WORLD,"\nmstar is currently set to %d \n", matexp.get_mstar());
+    PetscPrintf(PETSC_COMM_WORLD,"\ns is currently set to %d \n", matexp.get_s());
 
     matexp.print_expmvtAb();
 
