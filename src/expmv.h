@@ -60,6 +60,12 @@ class expmv
     ///@return the value for t
     PetscReal get_t();
 
+    void print_A();
+
+    void print_b();
+
+    void print_expmvtAb();
+
     int get_mstar();
 
     int get_s();

@@ -46,6 +46,12 @@ int main(int argc, char **argv) {
     std::cout << "\nt is currently set to " << matexp.get_t() << "\n";
     std::cout << "\nmstar is currently set to " << matexp.get_mstar() << "\n";
     std::cout << "\ns is currently set to " << matexp.get_s() << "\n";
+
+    matexp.print_expmvtAb();
+
+    MatView(A, PETSC_VIEWER_STDOUT_WORLD);
+    VecView(b, PETSC_VIEWER_STDOUT_WORLD);
+
     PetscFinalize();
     return 0;
 }

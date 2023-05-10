@@ -11,7 +11,10 @@ expmv::expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pma
 {
     this->t = t;
     this->A = A;
-    this->b =b;
+    PetscObjectSetName((PetscObject)this->A, "A");
+
+    this->b = b;
+    PetscObjectSetName((PetscObject)this->b, "b");
 
     MatNorm(A, NORM_1, &(this->Anorm));
     MatGetTrace(this->A, &(this->mu));
@@ -55,13 +58,14 @@ expmv::expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pma
 
 void expmv::compute_action()
 {
+
     if (this->balance)
     {
         std::cout << "Sorry kid, no balancing allowed yet, come back later >=(\n";
     }
+    Vec muI;
     if (this->shift)
     {
-        Vec muI;
 
         VecCreate(MPI_COMM_WORLD, &muI);
         VecSetSizes(muI, PETSC_DECIDE, this->n);
@@ -97,11 +101,11 @@ void expmv::compute_action()
 
 
     PetscScalar c1, c2, Fnorm;
-    Vec btemp;
+    Vec btemp, ogb;
 
-    VecCreate(MPI_COMM_WORLD, &btemp);
-    VecSetSizes(btemp, PETSC_DECIDE, this->n);
-    VecSetFromOptions(btemp);
+    VecDuplicate(this->b, &btemp);
+    VecDuplicate(this->b, &ogb);
+    VecCopy(this->b, ogb); //save a copy so we can still have the original b
 
     for (int i = 1; i <= this->s; i++)
     {
@@ -132,18 +136,31 @@ void expmv::compute_action()
         VecCopy(this->expmvtAb, this->b);
     }
 
+    VecCopy(ogb, this->b);
+
+    VecDestroy(&ogb);
+    VecDestroy(&btemp);
+
+    if (this->shift)
+    {
+        VecScale(muI, -1);
+        MatDiagonalSet(this->A, muI, ADD_VALUES); //undo the shifting
+        //this is important because the A in the class points to the same A outside the class
+        //that is, changing this A changes the original one so we undo all changes
+    }
+
+    VecDestroy(&muI);
+
     if (this->balance)
     {
         //do some cool stuff
     }
 
+    PetscObjectSetName((PetscObject)this->expmvtAb, "expmvtAb");
 
-};
+    
+    
 
-void expmv::get_expmvtAb(Vec *v)
-{
-    // PetscErrorCode ierr;
-    VecDuplicate(this->expmvtAb, v); //CHKERRQ(ierr);
 };
 
 void expmv::find_params()
@@ -222,6 +239,26 @@ void expmv::find_params()
 void expmv::set_A(Mat A)
 {
     this->A = A;
+};
+
+void expmv::print_A()
+{
+    MatView(this->A, PETSC_VIEWER_STDOUT_WORLD);
+};
+
+void expmv::print_b()
+{
+    VecView(this->b, PETSC_VIEWER_STDOUT_WORLD);
+};
+
+void expmv::print_expmvtAb()
+{
+    VecView(this->expmvtAb, PETSC_VIEWER_STDOUT_WORLD);
+};
+
+void expmv::get_expmvtAb(Vec *v)
+{
+    VecDuplicate(this->expmvtAb, v);
 };
 
 void expmv::set_t(PetscReal)
