@@ -21,7 +21,7 @@ class expmv
     ~expmv() {};
 
     /// @brief constructor
-    expmv(PetscReal t, Mat A, Vec b,const char precision[] = "double", int mmax = 55, int pmax = 15, bool shift = true, bool balance = true);
+    expmv(PetscReal t, Mat A, Vec b, MPI_Comm comm = PETSC_COMM_WORLD,const char precision[] = "double", int mmax = 55, int pmax = 15, bool shift = true, bool balance = true);
 
     /// @brief compute exp(t*A)b and save it in variable expmvtAb
     void compute_action();
@@ -44,53 +44,86 @@ class expmv
 
     public:
 
-    /// @brief set the matrix
-    /// @param A the matrix to be set as the matrix to take the exponential of
+    /// setter functions 
     void set_A(Mat A);
 
-    /// @brief set the scaling value t
-    /// @param t the scaling value
-    void set_t(PetscReal t);
-
-    /// @brief set the Vector
-    /// @param b the vector to be multiplied by the exponential
     void set_b(Vec b);
 
-    ///@brief get the current value for t
-    ///@return the value for t
+    void set_t(PetscReal t);
+
+    void set_precision(std::string precision);
+
+    void set_mmax(int mmax);
+
+    void set_pmax(int pmax);
+
+    void set_shift(bool shift);
+
+    void set_balance(bool balance);
+
+    ///getter functions
+    Mat get_A();
+
+    double get_Anorm();
+
+    double get_mu();
+
+    PetscInt get_n();
+
+    Vec get_b();
+
+    Vec get_expmvtAb();
+
+    std::string get_precision();
+
+    int get_mstar();
+
+    int get_s();
+
     PetscReal get_t();
 
+    int get_mmax();
+
+    int get_pmax();
+
+    bool get_shift();
+
+    bool get_balance();
+
+    //printing functions
     void print_A();
 
     void print_b();
 
     void print_expmvtAb();
 
-    int get_mstar();
-
-    int get_s();
-
     private:
-
-    PetscReal t;
     Mat A;
-    Vec b;
-    Vec expmvtAb;
-
-    PetscInt n;
-
     double Anorm;
     double mu;
-    int mmax;
-    int pmax;
+    PetscInt n;
+
+    Vec b;
+
+    Vec expmvtAb;
+    
     std::string precision;
     double tol;
 
     int mstar;
     int s;
 
+    public:
+
+    PetscReal t;
+
+    int mmax;
+    int pmax;
+
     bool shift;
     bool balance;
+
+    MPI_Comm comm;    
 };
 
 #endif
