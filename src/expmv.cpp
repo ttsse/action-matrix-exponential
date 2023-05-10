@@ -141,6 +141,7 @@ void expmv::find_params()
     VecCreate(MPI_COMM_WORLD, &Anormdivthetam);
     VecSetSizes(Anormdivthetam, PETSC_DECIDE, this->mmax);
     VecSetFromOptions(Anormdivthetam);
+    VecSetOption(Anormdivthetam,VEC_IGNORE_OFF_PROC_ENTRIES, (PetscBool)true);
 
     VecAssemblyBegin(thetaVec);
     VecAssemblyEnd(thetaVec);
