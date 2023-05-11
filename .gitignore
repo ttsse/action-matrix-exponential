@@ -3,3 +3,4 @@
 *.o
 demo/demo_initialize
 .bashrc
+*.mat
