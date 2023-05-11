@@ -41,14 +41,21 @@ int main(int argc, char **argv) {
     // Make a scaling value
     PetscReal t = 1;
 
+    // initialize expmv class
     expmv matexp(t, A, b);
+    
+    //compute matrix exponential
     matexp.compute_action();
+
+    //print some parameters
     PetscPrintf(PETSC_COMM_WORLD,"\nt is currently set to %f \n", matexp.get_t());
     PetscPrintf(PETSC_COMM_WORLD,"\nmstar is currently set to %d \n", matexp.get_mstar());
     PetscPrintf(PETSC_COMM_WORLD,"\ns is currently set to %d \n", matexp.get_s());
 
+    //print the result
     matexp.print_expmvtAb();
 
+    //print the original arrays to see they are unchanged
     MatView(A, PETSC_VIEWER_STDOUT_WORLD);
     VecView(b, PETSC_VIEWER_STDOUT_WORLD);
    
