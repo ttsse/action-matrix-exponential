@@ -20,7 +20,7 @@ FPPFLAGS =
 #  For a multi-file case, suppose you have the source files a.c, b.c, and c.cxx
 #  This can be built by uncommenting the following two lines.
 #
-demo_initialize : initialize.o ../src/expmv.o ../src/theta.o
+demo_basic : demo_basic.o ../src/expmv.o ../src/theta.o
 	$(LINK.C) -o $@ $^ $(LDLIBS)
 #
 #  When linking in a multi-files with Fortran source files a.F90, b.c, and c.cxx
