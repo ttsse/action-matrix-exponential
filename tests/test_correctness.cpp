@@ -9,48 +9,55 @@ int main(int argc, char **argv) {
     // Create a 2 by 2 matrix
     Mat A;
     MatCreate(PETSC_COMM_WORLD, &A);
-    MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, 2, 2);
+    MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, 10, 10);
     MatSetFromOptions(A);
     MatSetUp(A);
 
-    // Set values in the matrix
-    PetscInt rows[2] = {0, 1};
-    PetscInt cols[2] = {0, 1};
-    PetscScalar values[4] = {1.0, 2.0, 3.0, 4.0};
-    MatSetValues(A, 2, rows, 2, cols, values, INSERT_VALUES);
+    //create petscviewer object
+    PetscViewer viewer;
+    PetscViewerCreate(PETSC_COMM_WORLD,&viewer);
+    PetscViewerSetType(viewer,PETSCVIEWERHDF5);
+    PetscViewerFileSetMode(viewer,FILE_MODE_READ);
+    PetscViewerFileSetName(viewer,"matdensefiles/matdense10.mat");
+
+    // Create a 2 by 1 vector
+    Vec b;
+    VecCreate(PETSC_COMM_WORLD, &b);
+
+    // Assemble the vector
+    
+
+    // Make a scaling value
+    PetscReal t = -1;
+
+    // initialize expmv class
+
+    Vec expmvtAb;
+    VecCreate(PETSC_COMM_WORLD, &expmvtAb);
+
+    PetscObjectSetName((PetscObject)A, "A10");
+    PetscObjectSetName((PetscObject)b, "b10");
+    // PetscObjectSetName(t, "t");
+    PetscObjectSetName((PetscObject)expmvtAb, "expmvtAb");
+
+    MatLoad(A, viewer);
+    VecLoad(b, viewer);
+    VecLoad(expmvtAb, viewer);
 
     // Assemble the matrix
     MatAssemblyBegin(A, MAT_FINAL_ASSEMBLY);
     MatAssemblyEnd(A, MAT_FINAL_ASSEMBLY);
 
-    // Create a 2 by 1 vector
-    Vec b;
-    VecCreate(PETSC_COMM_WORLD, &b);
-    VecSetSizes(b, PETSC_DECIDE, 2);
-    VecSetFromOptions(b);
-    VecSetUp(b);
-
-    // Set values in the vector
-    PetscScalar b_values[2] = {5.0, 6.0};
-    VecSetValues(b, 2, rows, b_values, INSERT_VALUES);
-
-    // Assemble the vector
     VecAssemblyBegin(b);
     VecAssemblyEnd(b);
 
-    // Make a scaling value
-    PetscReal t = 1;
+    VecAssemblyBegin(expmvtAb);
+    VecAssemblyEnd(expmvtAb);
 
-    // initialize expmv class
     expmv matexp(t, A, b);
     
     //compute matrix exponential
     matexp.compute_action();
-
-    //print some parameters
-    PetscPrintf(PETSC_COMM_WORLD,"\nt is currently set to %f \n", matexp.get_t());
-    PetscPrintf(PETSC_COMM_WORLD,"\nmstar is currently set to %d \n", matexp.get_mstar());
-    PetscPrintf(PETSC_COMM_WORLD,"\ns is currently set to %d \n", matexp.get_s());
 
     //print the result
     matexp.print_expmvtAb();

@@ -20,7 +20,7 @@ FPPFLAGS =
 #  For a multi-file case, suppose you have the source files a.c, b.c, and c.cxx
 #  This can be built by uncommenting the following two lines.
 #
-test_correctness : demo_correctness.o ../src/expmv.o ../src/theta.o
+test_correctness : test_correctness.o ../src/expmv.o ../src/theta.o
 	$(LINK.C) -o $@ $^ $(LDLIBS)
 #
 #  When linking in a multi-files with Fortran source files a.F90, b.c, and c.cxx
@@ -32,7 +32,7 @@ test_correctness : demo_correctness.o ../src/expmv.o ../src/theta.o
 # If the file c.cxx needs to link with a C++ standard library -lstdc++ , then
 # you'll need to add it explicitly.  It can go in the rule above or be added to
 # a target-specific variable by uncommenting the line below.
-demo_initialize : LDLIBS += -lstdc++
+test_correctness : LDLIBS += -lstdc++
 
 PETSC_DIR = ~/petsc
 
