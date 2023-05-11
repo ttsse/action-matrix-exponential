@@ -4,3 +4,4 @@
 demo/demo_initialize
 .bashrc
 *.mat
+*.asv
