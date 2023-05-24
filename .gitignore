@@ -6,3 +6,5 @@ demo/demo_initialize
 *.mat
 *.asv
 tests/test_correctness
+tests/mfiles/*
+!tests/mfiles/writemfiles.m
