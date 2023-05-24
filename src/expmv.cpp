@@ -209,6 +209,7 @@ void expmv::set_A(Mat A)
     PetscObjectSetName((PetscObject)this->A, "A");
 
     MatNorm(A, NORM_1, &(this->Anorm));
+    this->Anorm *= abs(this->t); //this way avoids multiplying the entire matrix with a scalar
     MatGetTrace(this->A, &(this->mu));
     MatGetSize(A, &(this->n), NULL);
     this->mu = this->mu/(this->n);
