@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
     // Create a 2 by 2 matrix
     Mat A;
     MatCreate(PETSC_COMM_WORLD, &A);
-    MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, 10, 10);
+    MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, 1000, 1000);
     MatSetFromOptions(A);
     MatSetUp(A);
 
@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
     PetscViewerCreate(PETSC_COMM_WORLD,&viewer);
     PetscViewerSetType(viewer,PETSCVIEWERHDF5);
     PetscViewerFileSetMode(viewer,FILE_MODE_READ);
-    PetscViewerFileSetName(viewer,"matdensefiles/matdense10.mat");
+    PetscViewerFileSetName(viewer,"matsparsefiles/matsparse1000.mat");
 
     // Create a 2 by 1 vector
     Vec b;
@@ -35,8 +35,8 @@ int main(int argc, char **argv) {
     Vec expmvtAb;
     VecCreate(PETSC_COMM_WORLD, &expmvtAb);
 
-    PetscObjectSetName((PetscObject)A, "A10");
-    PetscObjectSetName((PetscObject)b, "b10");
+    PetscObjectSetName((PetscObject)A, "A1000");
+    PetscObjectSetName((PetscObject)b, "b1000");
     // PetscObjectSetName(t, "t");
     PetscObjectSetName((PetscObject)expmvtAb, "expmvtAb");
 
@@ -59,12 +59,7 @@ int main(int argc, char **argv) {
     //compute matrix exponential
     matexp.compute_action();
 
-    //print the result
-    matexp.print_expmvtAb();
-
-    //print the original arrays to see they are unchanged
-    MatView(A, PETSC_VIEWER_STDOUT_WORLD);
-    VecView(b, PETSC_VIEWER_STDOUT_WORLD);
+    std::cout << "hello, I finished the test!\n";
    
     PetscFinalize();
     return 0;
