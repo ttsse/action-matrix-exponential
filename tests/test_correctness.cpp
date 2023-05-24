@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
     // Create a 2 by 2 matrix
     Mat A;
     MatCreate(PETSC_COMM_WORLD, &A);
-    MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, 1000, 1000);
+    // MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, 1000, 1000);
     MatSetFromOptions(A);
     MatSetUp(A);
 
@@ -35,8 +35,8 @@ int main(int argc, char **argv) {
     Vec expmvtAb;
     VecCreate(PETSC_COMM_WORLD, &expmvtAb);
 
-    PetscObjectSetName((PetscObject)A, "A1000");
-    PetscObjectSetName((PetscObject)b, "b1000");
+    PetscObjectSetName((PetscObject)A, "A");
+    PetscObjectSetName((PetscObject)b, "b");
     // PetscObjectSetName(t, "t");
     PetscObjectSetName((PetscObject)expmvtAb, "expmvtAb");
 
@@ -59,7 +59,13 @@ int main(int argc, char **argv) {
     //compute matrix exponential
     matexp.compute_action();
 
-    std::cout << "hello, I finished the test!\n";
+    matexp.print_A();
+    matexp.print_b();
+
+    std::cout <<"Computed result: \n";
+    matexp.print_expmvtAb();
+
+    std::cout << "Expected result\n";
    
     PetscFinalize();
     return 0;
