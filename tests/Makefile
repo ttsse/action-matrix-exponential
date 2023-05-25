@@ -22,6 +22,9 @@ FPPFLAGS =
 #
 test_correctness : test_correctness.o ../src/expmv.o ../src/theta.o
 	$(LINK.C) -o $@ $^ $(LDLIBS)
+
+test_parallel : test_parallel.o ../src/expmv.o ../src/theta.o
+	$(LINK.C) -o $@ $^ $(LDLIBS)
 #
 #  When linking in a multi-files with Fortran source files a.F90, b.c, and c.cxx
 #  You may need to use
@@ -33,6 +36,7 @@ test_correctness : test_correctness.o ../src/expmv.o ../src/theta.o
 # you'll need to add it explicitly.  It can go in the rule above or be added to
 # a target-specific variable by uncommenting the line below.
 test_correctness : LDLIBS += -lstdc++
+test_parallel : LDLIBS += -lstdc++
 
 PETSC_DIR = ~/petsc
 
