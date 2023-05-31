@@ -26,6 +26,7 @@ int main(int argc, char **argv) {
     Vec b;
     VecCreate(PETSC_COMM_WORLD, &b);
     VecSetSizes(b, PETSC_DECIDE, Asz);
+    VecSetFromOptions(b);
     VecSetRandom(b, NULL);
     VecAssemblyBegin(b);
     VecAssemblyEnd(b);
