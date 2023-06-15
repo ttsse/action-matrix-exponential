@@ -32,9 +32,6 @@ int main(int argc, char **argv) {
     Vec b;
     VecCreate(PETSC_COMM_WORLD, &b);
 
-    // Assemble the vector
-    
-
     // Make a scaling value
     PetscReal t = std::atof(argv[1]);
 
