@@ -1,0 +1,10 @@
+make test_correctness
+./test_correctness -1 Aid.mat
+./test_correctness -1 Anormal.mat
+./test_correctness -2 Anormaltm2.mat
+./test_correctness -5 Anormaltm5.mat
+./test_correctness -0.5 Anormaltm05.mat
+./test_correctness -10 Anormaltm10.mat
+./test_correctness -25 Anormaltm25.mat
+./test_correctness -50 Anormaltm50.mat
+./test_correctness -1 Abadcond.mat
