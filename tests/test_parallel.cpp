@@ -12,9 +12,10 @@ int main(int argc, char **argv) {
 
     // Create a 2 by 2 matrix
     Mat A;
-    PetscInt Asz = 2*2*7*8*9;
+    PetscInt Asz = 2*2*5*7*8*9;
     MatCreateAIJ(PETSC_COMM_WORLD,PETSC_DECIDE,PETSC_DECIDE,Asz,Asz,3,NULL, 4,NULL,Mat *A);
     MatSetRandom(A,NULL);
+    MatSetOption(A,MAT_NEW_NONZERO_ALLOCATION_ERR,PETSC_FALSE);
     MatSetFromOptions(A);
     MatSetUp(A);
 
@@ -42,13 +43,16 @@ int main(int argc, char **argv) {
     //compute matrix exponential
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
+    for (int i = 0; i < 3; i++)
+    {
     matexp.compute_action();
+    }
 
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
     PetscPrintf(PETSC_COMM_WORLD, "Time difference = ");
-    PetscPrintf(PETSC_COMM_WORLD, "%d",std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
-    PetscPrintf(PETSC_COMM_WORLD, "[µs]\n");
+    PetscPrintf(PETSC_COMM_WORLD, "%0.3f",(double)(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()/3000));
+    PetscPrintf(PETSC_COMM_WORLD, "[s]\n");
 
     PetscFinalize();
     return 0;
