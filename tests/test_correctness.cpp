@@ -3,6 +3,9 @@
 #include <petscsystypes.h>
 #include "../src/expmv.h"
 #include <iostream>
+#include <string>
+
+
 int main(int argc, char **argv) {
     PetscInitialize(&argc, &argv, NULL, NULL);
 
@@ -18,7 +21,12 @@ int main(int argc, char **argv) {
     PetscViewerCreate(PETSC_COMM_WORLD,&viewer);
     PetscViewerSetType(viewer,PETSCVIEWERHDF5);
     PetscViewerFileSetMode(viewer,FILE_MODE_READ);
-    PetscViewerFileSetName(viewer,"testmats/"+argv[2]);
+
+    std::string str = std::string("testmats/") + std::string(argv[2]);
+
+    const char *matname = str.c_str();
+
+    PetscViewerFileSetName(viewer,matname);
 
     // Create a 2 by 1 vector
     Vec b;
@@ -28,7 +36,7 @@ int main(int argc, char **argv) {
     
 
     // Make a scaling value
-    PetscReal t = argv[1]-'0';
+    PetscReal t = std::atof(argv[1]);
 
     // initialize expmv class
 
