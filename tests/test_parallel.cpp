@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     // Create a 2 by 2 matrix
     Mat A;
     PetscInt Asz = 2*5*7*8*9;
-    MatCreateDense(PETSC_COMM_WORLD,PETSC_DECIDE,PETSC_DECIDE, Asz,Asz, &A);
+    MatCreateDense(PETSC_COMM_WORLD,PETSC_DECIDE,PETSC_DECIDE, Asz,Asz,NULL, &A);
     MatSetRandom(A,NULL);
     MatSetFromOptions(A);
     MatSetUp(A);
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
     PetscPrintf(PETSC_COMM_WORLD, "Time difference = ");
-    PetscPrintf(PETSC_COMM_WORLD, std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+    PetscPrintf(PETSC_COMM_WORLD, "%d",std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     PetscPrintf(PETSC_COMM_WORLD, "[µs]\n");
 
     PetscFinalize();
