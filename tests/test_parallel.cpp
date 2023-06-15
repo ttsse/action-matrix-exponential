@@ -46,9 +46,9 @@ int main(int argc, char **argv) {
 
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-    PetscPrintf("Time difference = ");
-    PetscPrintf(std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
-    PetscPrintf("[µs]\n");
+    PetscPrintf(PETSC_COMM_WORLD, "Time difference = ");
+    PetscPrintf(PETSC_COMM_WORLD, std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+    PetscPrintf(PETSC_COMM_WORLD, "[µs]\n");
 
     PetscFinalize();
     return 0;
