@@ -3,7 +3,6 @@
 *.o
 demo/demo_initialize
 .bashrc
-*.mat
 *.asv
 tests/test_correctness
 tests/mfiles/*
