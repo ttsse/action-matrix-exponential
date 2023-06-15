@@ -10,6 +10,9 @@
 int main(int argc, char **argv) {
     PetscInitialize(&argc, &argv, NULL, NULL);
 
+    int size;
+    MPI_Comm_size(PETSC_COMM_WORLD,&size);
+
     // Create a 2 by 2 matrix
     Mat A;
     PetscInt Asz = 2*2*5*7*8*9;
@@ -50,7 +53,7 @@ int main(int argc, char **argv) {
 
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-    PetscPrintf(PETSC_COMM_WORLD, "Time difference = ");
+    PetscPrintf(PETSC_COMM_WORLD, "Time ellapsed with %d processors = ");
     PetscPrintf(PETSC_COMM_WORLD, "%0.3f",(double)(std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count())/3000);
     PetscPrintf(PETSC_COMM_WORLD, "[s]\n");
 
