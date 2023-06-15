@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
     PetscViewerCreate(PETSC_COMM_WORLD,&viewer);
     PetscViewerSetType(viewer,PETSCVIEWERHDF5);
     PetscViewerFileSetMode(viewer,FILE_MODE_READ);
-    PetscViewerFileSetName(viewer,"matsparsefiles/matsparse1000.mat");
+    PetscViewerFileSetName(viewer,"testmats/"+argv[2]);
 
     // Create a 2 by 1 vector
     Vec b;
@@ -28,12 +28,13 @@ int main(int argc, char **argv) {
     
 
     // Make a scaling value
-    PetscReal t = -1;
+    PetscReal t = argv[1]-'0';
 
     // initialize expmv class
 
-    Vec expmvtAb;
+    Vec expmvtAb, expmvtAbcomputed;
     VecCreate(PETSC_COMM_WORLD, &expmvtAb);
+    VecCreate(PETSC_COMM_WORLD, &expmvtAbcomputed);
 
     PetscObjectSetName((PetscObject)A, "A");
     PetscObjectSetName((PetscObject)b, "b");
@@ -55,18 +56,18 @@ int main(int argc, char **argv) {
     VecAssemblyEnd(expmvtAb);
 
     expmv matexp(t, A, b);
+    expmvtAbcomputed = matexp.get_expmvtAb();
     
     //compute matrix exponential
     matexp.compute_action();
 
-    matexp.print_A();
-    matexp.print_b();
+    PetscReal err;
 
-    std::cout <<"Computed result: \n";
-    matexp.print_expmvtAb();
+    VecAXPY(expmvtAbcomputed, -1, expmvtAb);
+    VecNorm(expmvtAbcomputed, NORM_2, &err);
 
-    std::cout << "Expected result\n";
-   
+    std::cout << "Error for " << argv[2] <<" = " err << "\n";
+
     PetscFinalize();
     return 0;
 }
