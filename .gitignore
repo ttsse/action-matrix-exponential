@@ -5,5 +5,3 @@ demo/demo_initialize
 .bashrc
 *.asv
 tests/test_correctness
-tests/mfiles/*
-!tests/mfiles/writemfiles.m
