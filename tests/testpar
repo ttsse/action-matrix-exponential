@@ -1,0 +1,7 @@
+make test_parallel
+mpiexec -np 1 ./test_parallel
+mpiexec -np 2 ./test_parallel
+mpiexec -np 3 ./test_parallel
+mpiexec -np 4 ./test_parallel
+mpiexec -np 7 ./test_parallel
+mpiexec -np 8 ./test_parallel
