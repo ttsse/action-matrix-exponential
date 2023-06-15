@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     // Create a 2 by 2 matrix
     Mat A;
     PetscInt Asz = 2*2*5*7*8*9;
-    MatCreateAIJ(PETSC_COMM_WORLD,PETSC_DECIDE,PETSC_DECIDE,Asz,Asz,3,NULL, 4,NULL,Mat *A);
+    MatCreateAIJ(PETSC_COMM_WORLD,PETSC_DECIDE,PETSC_DECIDE,Asz,Asz,3,NULL, 4,NULL,&A);
     MatSetRandom(A,NULL);
     MatSetOption(A,MAT_NEW_NONZERO_ALLOCATION_ERR,PETSC_FALSE);
     MatSetFromOptions(A);
