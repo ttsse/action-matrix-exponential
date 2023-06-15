@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
     // Create a 2 by 2 matrix
     Mat A;
     MatCreate(PETSC_COMM_WORLD, &A);
-    // MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, 1000, 1000);
+    MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, 2, 2);
     MatSetFromOptions(A);
     MatSetUp(A);
 
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
     VecAXPY(expmvtAbcomputed, -1, expmvtAb);
     VecNorm(expmvtAbcomputed, NORM_2, &err);
 
-    std::cout << "Error for " << argv[2] <<" = " err << "\n";
+    std::cout << "Error for " << argv[2] <<" = " <<err << "\n";
 
     PetscFinalize();
     return 0;
