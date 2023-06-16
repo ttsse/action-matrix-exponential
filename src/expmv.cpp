@@ -183,11 +183,66 @@ void expmv::find_params()
         int rank;
         MPI_Comm_rank(PETSC_COMM_WORLD,&rank);
 
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[1]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[2]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[3]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[4]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[5]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[6]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[7]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[8]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[9]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[10]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[11]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[12]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[13]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[14]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[15]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[16]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[17]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[18]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[19]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[20]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[21]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[22]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[23]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[24]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[25]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[26]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[27]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[28]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[29]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[30]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[31]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[32]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[33]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[34]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[35]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[36]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[37]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[38]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[39]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[40]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[41]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[42]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[43]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[44]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[45]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[46]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[47]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[48]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[49]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[50]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[51]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[52]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[53]);
+        Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[54]);
+
         if (rank == 0)
         {
             for (int i = 0; i<this->mmax; i++)
             {
-                Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[i]);
+                //Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[i]);
             }
         }
 
