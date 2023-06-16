@@ -181,13 +181,13 @@ void expmv::find_params()
         VecGetArray(Anormdivthetam, &Anormdivthetamceil);
 
         int rank;
-        MPI_Comm_rank(&rank);
+        MPI_Comm_rank(PETSC_COMM_WORLD,&rank);
 
         if (rank == 0)
         {
             for (int i = 0; i<this->mmax; i++)
             {
-                Anormdivthetamceil[i] = ceil(Anormdivthetamceil[i]);
+                Anormdivthetamceil[i] = (PetscScalar)ceil(Anormdivthetamceil[i]);
             }
         }
 
