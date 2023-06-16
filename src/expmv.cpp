@@ -185,7 +185,7 @@ void expmv::find_params()
             Anormdivthetamceil[i] = ceil(Anormdivthetamceil[i]);
         }
 
-	VecRestoreArray(Anormdivthetam,&Anormdivthetamceil);
+	    VecRestoreArray(Anormdivthetam,&Anormdivthetamceil);
 
         VecPointwiseMult(thetaVec, mVec,Anormdivthetam); //let's reuse thetaVec
 
@@ -198,6 +198,11 @@ void expmv::find_params()
     {
         //not implemented yet, i'm sure it will work...
     }
+
+    VecDestroy(&thetaVec);
+    VecDestroy(&AnormVec);
+    VecDestroy(Anormdivthetam);
+    VecDestroy(mVec);
 };
 
 ///setter functions
