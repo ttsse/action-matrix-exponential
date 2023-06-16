@@ -180,10 +180,18 @@ void expmv::find_params()
         
         VecGetArray(Anormdivthetam, &Anormdivthetamceil);
 
-        for (int i = 0; i<this->mmax; i++)
+        int rank;
+        MPI_Comm_rank(&rank);
+
+        if (rank == 0)
         {
-            Anormdivthetamceil[i] = ceil(Anormdivthetamceil[i]);
+            for (int i = 0; i<this->mmax; i++)
+            {
+                Anormdivthetamceil[i] = ceil(Anormdivthetamceil[i]);
+            }
         }
+
+        MPI_Barrier(PETSC_COMM_WORLD);
 
 	    VecRestoreArray(Anormdivthetam,&Anormdivthetamceil);
 
@@ -201,8 +209,8 @@ void expmv::find_params()
 
     VecDestroy(&thetaVec);
     VecDestroy(&AnormVec);
-    VecDestroy(Anormdivthetam);
-    VecDestroy(mVec);
+    VecDestroy(&Anormdivthetam);
+    VecDestroy(&mVec);
 };
 
 ///setter functions
