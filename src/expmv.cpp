@@ -177,21 +177,20 @@ void expmv::find_params()
         VecPointwiseDivide(Anormdivthetam, AnormVec, thetaVec);
 
         PetscScalar* Anormdivthetamceil;
+        PetscInt low,high;
         
         VecGetArray(Anormdivthetam, &Anormdivthetamceil);
+        VecGetOwnershipRange(Anormdivthetam, &low,&high);
 
         int rank, i;
         MPI_Comm_rank(PETSC_COMM_WORLD,&rank);
 
         i = 0;
 
-        while (Anormdivthetamceil[i] > 0)
+        for (i = 0; i<(high-low); i++)
         {
             Anormdivthetamceil[i] = ceil(Anormdivthetamceil[i]);
-            i++;
         }
-
-        MPI_Barrier(PETSC_COMM_WORLD);
 
 	    VecRestoreArray(Anormdivthetam,&Anormdivthetamceil);
 
