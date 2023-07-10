@@ -34,3 +34,9 @@ expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pmax, bool
 ```shift``` decides if the matrix $A$ should be shifted before computations by subtracting trace(A) from the diagonal, resulting in a more well conditioned matrix. Default is true.
 
 ```balance``` decides if the matrix should be balanced before computations. Deafult is false.
+
+```
+void compute_action()
+```
+
+Computes the action ```x``` using the given instance variables. It is then possible to get ```x``` using ```Vec get_x()```.
