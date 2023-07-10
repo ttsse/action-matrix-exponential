@@ -9,7 +9,10 @@ git pull
 Once downloaded, Petsc can be configured with
 
 ```
-./configure --with-cc=gcc --with-cxx=g++ --download-mpich --download-f2cblaslapack --download-hdf5 --with-fc=0  
+./configure --with-cc=gcc --with-cxx=g++ --download-mpich --download-f2cblaslapack --download-hdf5 --with-fc=0
+```
+and built with
+```
 make PETSC_DIR=/home/ubuntu/petsc PETSC_ARCH=arch-linux-c-debug all
 ```
 
