@@ -1,12 +1,12 @@
 # Installation #
 Petsc is required and can be installed with
-```git clone -b release https://gitlab.com/petsc/petsc.git petsc
-git pull```
+```git clone -b release https://gitlab.com/petsc/petsc.git petsc```
+```git pull```
 
 Once downloaded, Petsc can be configured with
 
-``` ./configure --with-cc=gcc --with-cxx=g++ --download-mpich --download-f2cblaslapack --download-hdf5 --with-fc=0
-make PETSC_DIR=/home/ubuntu/petsc PETSC_ARCH=arch-linux-c-debug all```
+``` ./configure --with-cc=gcc --with-cxx=g++ --download-mpich --download-f2cblaslapack --download-hdf5 --with-fc=0```
+```make PETSC_DIR=/home/ubuntu/petsc PETSC_ARCH=arch-linux-c-debug all```
 
 Note: Depending on what is already available on the system, it may not be necessary to download everything during the configuration. Further, hdf5 is only required for the tests or if you want to read in Matlab matrices to Petsc.
 
