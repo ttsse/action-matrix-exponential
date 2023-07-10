@@ -2,8 +2,8 @@
 Petsc is required and can be installed with\\
 
 ```
-    git clone -b release https://gitlab.com/petsc/petsc.git petsc
-    git pull
+ git clone -b release https://gitlab.com/petsc/petsc.git petsc
+ git pull
 ```
 
 Once downloaded, Petsc can be configured with
