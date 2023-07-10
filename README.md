@@ -11,10 +11,8 @@ Once downloaded, Petsc can be configured with
 ```
 ./configure --with-cc=gcc --with-cxx=g++ --download-mpich --download-f2cblaslapack --download-hdf5 --with-fc=0
 ```
-and built with
-```
-make PETSC_DIR=/home/ubuntu/petsc PETSC_ARCH=arch-linux-c-debug all
-```
+
+and built according to the message given when the configuration is set up.
 
 Note: Depending on what is already available on the system, it may not be necessary to download everything during the configuration. Further, hdf5 is only required for the tests or if you want to read in Matlab matrices to Petsc.
 
