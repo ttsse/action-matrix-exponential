@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
     //compute matrix exponential
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
     matexp.compute_action();
     }
