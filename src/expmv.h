@@ -21,7 +21,7 @@ class expmv
     ~expmv() {};
 
     /// @brief constructor
-    expmv(PetscReal t, Mat A, Vec b,const char precision[] = "double", int mmax = 55, int pmax = 15, bool shift = true, bool balance = false);
+    expmv(PetscReal t, Mat A, Vec b);
 
     /// @brief compute exp(t*A)b and save it in variable expmvtAb
     void compute_action();

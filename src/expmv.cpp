@@ -7,17 +7,17 @@
 #include<iostream>
 #include "expmv.h"
 
-expmv::expmv(PetscReal t, Mat A, Vec b,const char precision[], int mmax, int pmax, bool shift, bool balance)
+expmv::expmv(PetscReal t, Mat A, Vec b)
 {
     this->set_t(t);
     this->set_A(A);
     this->set_b(b);
-    this->set_mmax(mmax);
-    this->set_pmax(pmax);
-    this->set_precision(precision);
+    this->set_mmax(55);
+    this->set_pmax(15);
+    this->set_precision('double');
 
-    this->set_shift(shift);
-    this->set_balance(balance);
+    this->set_shift(true);
+    this->set_balance(false);
 };
 
 void expmv::compute_action()
