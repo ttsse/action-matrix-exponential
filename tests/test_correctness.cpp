@@ -4,15 +4,15 @@
 #include "../src/expmv.h"
 #include <iostream>
 #include <string>
+#include<gtest/gtest.h>
 
-
-int main(int argc, char **argv) {
-    PetscInitialize(&argc, &argv, NULL, NULL);
+double testmat(char* name, int size, double t) {
+    //PetscInitialize(&argc, &argv, NULL, NULL);
 
     // Create a 2 by 2 matrix
     Mat A;
     MatCreate(PETSC_COMM_WORLD, &A);
-    MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, std::atof(argv[3]), std::atof(argv[3]));
+    MatSetSizes(A, PETSC_DECIDE, PETSC_DECIDE, size, size);
     MatSetFromOptions(A);
     MatSetUp(A);
 
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     PetscViewerSetType(viewer,PETSCVIEWERHDF5);
     PetscViewerFileSetMode(viewer,FILE_MODE_READ);
 
-    std::string str = std::string("testmats/") + std::string(argv[2]);
+    std::string str = std::string("testmats/") + std::string(name);
 
     const char *matname = str.c_str();
 
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     VecCreate(PETSC_COMM_WORLD, &b);
 
     // Make a scaling value
-    PetscReal t = std::atof(argv[1]);
+    //PetscReal t = std::atof(t);
 
     // initialize expmv class
 
@@ -71,9 +71,29 @@ int main(int argc, char **argv) {
     VecAXPY(expmvtAbcomputed, -1, expmvtAb);
     VecNorm(expmvtAbcomputed, NORM_2, &err);
 
-    PetscPrintf(PETSC_COMM_WORLD,"Error for %s = %g\n",argv[2],err);
+    //PetscPrintf(PETSC_COMM_WORLD,"Error for %s = %g\n",argv[2],err);
     //std::cout << "Error for " << argv[2] <<" = " <<err << "\n";
 
-    PetscFinalize();
-    return 0;
+    //PetscFinalize();
+    return err;
+}
+
+TEST(correctnesstest, Aidmat) { 
+    EXPECT_LE(testmat("Aid.mat",2,-1),1e-10);
+}
+
+TEST(correctnesstest, Anormalmat) {
+    EXPECT_LE(testmat("Anormal.mat",2,-1),1e-10);
+}
+
+TEST(correctnesstest, Atm50mat) {
+    EXPECT_LE(testmat("Anormaltm50.mat",2,-50),1e-5);
+}
+
+TEST(correctnesstest, Abadcondmat) {
+    EXPECT_LE(testmat("Abadcond.mat",2,-1),1e-10);
+}
+
+TEST(correctnesstest, Anegmat) {
+    EXPECT_LE(testmat("Aneg.mat",2,1),1e-10);
 }
