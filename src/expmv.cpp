@@ -16,7 +16,7 @@ expmv::expmv(PetscReal t, Mat A, Vec b)
     this->set_pmax(15);
     this->set_precision(std::string("double"));
 
-    this->set_shift(false);
+    this->set_shift(true);
     this->set_balance(false);
 };
 
