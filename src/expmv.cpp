@@ -30,7 +30,14 @@ void expmv::compute_action()
     Vec muI;
     if (this->shift)
     {
-        PetscPrintf(PETSC_COMM_WORLD, "Shift? Sorry, no can do\n");
+        VecCreate(MPI_COMM_WORLD, &muI);
+        VecSetSizes(muI, PETSC_DECIDE, this->n);
+        VecSetFromOptions(muI);
+        VecSet(muI,-1*(this->mu));
+        VecAssemblyBegin(muI);
+        VecAssemblyEnd(muI);        
+
+        MatDiagonalSet(this->A, muI, ADD_VALUES); //line 6
     }
 
     if ((!(this->t) && !(this->Anorm)))
@@ -91,7 +98,10 @@ void expmv::compute_action()
 
     if (this->shift)
     {
-        
+        VecScale(muI, -1);
+        MatDiagonalSet(this->A, muI, ADD_VALUES); //undo the shifting
+        //this is important because the A in the class points to the same A outside the class
+        //that is, changing this A changes the original one so we undo all changes
     }
 
     VecDestroy(&muI);
