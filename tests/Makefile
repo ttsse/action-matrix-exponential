@@ -5,11 +5,17 @@
 #  See also $PETSC_DIR/share/petsc/Makefile.user for the preferred approach
 #  You must set the environmental variable(s) PETSC_DIR (and PETSC_ARCH if PETSc was not configured with the --prefix option)
 
+GOOGLE_TEST_LIB = gtest
+GOOGLE_TEST_INCLUDE = -I/home/ubuntu/googletest/googletest/include
+
+G++_FLAGS = -c -Wall $(GOOGLE_TEST_INCLUDE)
+LD_FLAGS = -L/home/ubuntu/googletest/build/lib -l $(GOOGLE_TEST_LIB) -l pthread
+
 #   You can set specific values below but that should be rarely needed
-CFLAGS   =
-FFLAGS   =
+CFLAGS   = 
+FFLAGS   = 
 CPPFLAGS =
-FPPFLAGS =
+FPPFLAGS = 
 
 #  For example - a single source file (ex1.c or ex1.F90) can be compiled with:
 #
@@ -20,7 +26,8 @@ FPPFLAGS =
 #  For a multi-file case, suppose you have the source files a.c, b.c, and c.cxx
 #  This can be built by uncommenting the following two lines.
 #
-test_correctness : test_correctness.o ../src/expmv.o ../src/theta.o
+
+test_correctness : main.o test_correctness.o ../src/expmv.o ../src/theta.o
 	$(LINK.C) -o $@ $^ $(LDLIBS)
 
 test_parallel : test_parallel.o ../src/expmv.o ../src/theta.o
@@ -35,15 +42,14 @@ test_parallel : test_parallel.o ../src/expmv.o ../src/theta.o
 # If the file c.cxx needs to link with a C++ standard library -lstdc++ , then
 # you'll need to add it explicitly.  It can go in the rule above or be added to
 # a target-specific variable by uncommenting the line below.
-test_correctness : LDLIBS += -lstdc++
+test_correctness : LDLIBS += -lstdc++ -l $(GOOGLE_TEST_LIB) -L/home/ubuntu/googletest/build/lib -l pthread 
 test_parallel : LDLIBS += -lstdc++
 
 PETSC_DIR = ~/petsc
 
-include ${PETSC_DIR}/lib/petsc/conf/variables
-
+include ${PETSC_DIR}/lib/petsc/conf/variables 
+CXX_FLAGS = $(GOOGLE_TEST_INCLUDE) $(LD_FLAGS)
 #  To access the PETSc variables for the build, including compilers, compiler flags, libraries etc but
 #  manage the build rules yourself (rarely needed) comment out the next lines
 #
 include ${PETSC_DIR}/lib/petsc/conf/rules
-

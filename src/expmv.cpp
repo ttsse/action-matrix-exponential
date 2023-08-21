@@ -30,7 +30,6 @@ void expmv::compute_action()
     Vec muI;
     if (this->shift)
     {
-
         VecCreate(MPI_COMM_WORLD, &muI);
         VecSetSizes(muI, PETSC_DECIDE, this->n);
         VecSetFromOptions(muI);
