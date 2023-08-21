@@ -14,7 +14,6 @@ expmv::expmv(PetscReal t, Mat A, Vec b)
     this->set_b(b);
     this->set_mmax(55);
     this->set_pmax(15);
-    this->set_precision(std::string("double"));
 
     this->set_shift(true);
     this->set_balance(false);
@@ -243,34 +242,6 @@ void expmv::set_t(PetscReal t)
     this->t = t;
 };
 
-void expmv::set_precision(std::string precision)
-{
-    std::string prec(precision);
-
-    this->precision = prec;
-
-    std::string half("half");
-    std::string single("single");
-    std::string doubles("double");
-
-    if (this->precision == half)
-    {
-        this->tol = pow(2,-10);
-    }
-    else if (this->precision == single)
-    {
-        this->tol = pow(2,-24);
-    }
-    else if (this->precision == doubles)
-    {
-        this->tol = pow(2,-53);
-    }
-    else
-    {
-        throw std::exception();
-    }
-}
-
 void expmv::set_mmax(int mmax)
 {
     this->mmax = mmax;
@@ -321,11 +292,6 @@ Vec expmv::get_b()
 Vec expmv::get_expmvtAb()
 {
     return this->expmvtAb;
-}
-
-std::string expmv::get_precision()
-{
-    return this->precision;
 }
 
 int expmv::get_mstar()
