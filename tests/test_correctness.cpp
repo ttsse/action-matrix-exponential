@@ -6,7 +6,7 @@
 #include <string>
 #include<gtest/gtest.h>
 
-double testmat(char* name, int size, double t) {
+double testmat(std::string name, int size, double t) {
     //PetscInitialize(&argc, &argv, NULL, NULL);
 
     // Create a 2 by 2 matrix
@@ -22,7 +22,7 @@ double testmat(char* name, int size, double t) {
     PetscViewerSetType(viewer,PETSCVIEWERHDF5);
     PetscViewerFileSetMode(viewer,FILE_MODE_READ);
 
-    std::string str = std::string("testmats/") + std::string(name);
+    std::string str = std::string("testmats/") + name;
 
     const char *matname = str.c_str();
 
